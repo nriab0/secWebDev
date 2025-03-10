@@ -37,7 +37,7 @@
                                           Entry ID: <b>'" . escapeSTR($id) . "'</b>
                                           <br>
                                           <form class='admin-form' method='GET'>
-                                                <label>IP Address: </label><input type='text' name='IP' value='" . escapeSTR($isAddr) . "'><br>
+                                                <label>IP Address: </label><input type='text' name='IP' value='" . escapeSTR($ipAddr) . "'><br>
                                                 <label>Timestamp: </label><input type='text' name='timestamp' value='" . escapeSTR($time) . "' ><br>
                                                 <label>User ID: </label><input type='text' name='timestamp' value='" . escapeSTR($user_id) . "' ><br>
                                                 <label>Outcome: </label><input type='text' name='timestamp' value='" . escapeSTR($outcome) . "' >
