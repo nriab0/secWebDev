@@ -1,4 +1,5 @@
 <?php
+	require_once 'functions.php';
 	include_once 'header.php';
 	if (!isset($_SESSION['u_id'])) {
 	header("Location: home.php");
@@ -16,7 +17,7 @@
 				if(file_get_contents ("$ViewFile"))    
 				{
 				$FileData = file_get_contents ("$ViewFile");
-				echo $FileData;
+				echo escapeSTR($FileData);
 				}
 				else
 				{

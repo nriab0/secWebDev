@@ -1,4 +1,5 @@
 <?php
+    require_once 'functions.php';   
     session_start();
     //include_once 'includes/dbh.inc.php';
     if(!isset($_SESSION['u_id'])) {
@@ -30,7 +31,7 @@ document.onkeypress = resetTimer;
 
 //Only logout if the user is logged in
 function logout() {
-    var session='<?php echo $session;?>';
+    var session='<?php echo escapeSTR($session);?>';
     if(session == 1) {
         location.href = './includes/logout.inc.php'
     } else {

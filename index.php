@@ -1,5 +1,6 @@
 <?php
-      include_once 'header.php';
+      require_once 'functions.php';
+	  include_once 'header.php';
 ?>
         <section class="main-container">
             <div class="main-wrapper">
@@ -93,31 +94,31 @@
 					echo "<br>";
 					if (isset($_SESSION['failedMsg']))
 					{
-						echo $_SESSION['failedMsg'];
+						echo escapeSTR($_SESSION['failedMsg']);
 						unset($_SESSION['failedMsg']);
 					}
 
 					//Message if locked out 
 					if(isset($_SESSION['lockedOut'])) {
-						echo $_SESSION['lockedOut'];
+						echo escapeSTR($_SESSION['lockedOut']);
 						unset($_SESSION['lockedOut']);
 					}
 
 					//Remaining seconds for current lockout
 					if(isset($_SESSION['timeLeft'])) {
-						echo " (" . $_SESSION['timeLeft'] . " seconds remaining).";
+						echo escapeSTR(" (" . $_SESSION['timeLeft'] . " seconds remaining).");
 						unset($_SESSION['timeLeft']);
 					}
 
 					//Print messages re: registration
 					if(isset($_SESSION['register'])) {
-						echo $_SESSION['register'];
+						echo escapeSTR($_SESSION['register']);
 						unset($_SESSION['register']);
 					}
 
 					//Print messages re: changing password
 					if(isset($_SESSION['resetError'])) {
-						echo $_SESSION['resetError'];
+						echo escapeSTR($_SESSION['resetError']);
 						unset($_SESSION['resetError']);
 					}
                 ?>

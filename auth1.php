@@ -1,4 +1,5 @@
 <?php
+	require_once 'functions.php';
 	include_once 'header.php';
 	if (!isset($_SESSION['u_id'])) {
 	header("Location: home.php");
@@ -19,7 +20,7 @@
 	//Reflect user's name on the page
 	if(isset($_SESSION['u_id'])) {
 		$user_uid = $_SESSION['u_uid'];
-		echo "You're logged in as " . cleanChars($user_uid);
+		echo escapeSTR("You're logged in as " . cleanChars($user_uid));
 	}
 
 	function cleanChars($val)

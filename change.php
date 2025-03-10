@@ -1,4 +1,5 @@
 <?php
+    require_once 'funtions.php';
     include_once 'header.php';
 ?>
 

@@ -1,6 +1,7 @@
 <?php
+      require_once 'functions.php';
       include_once 'header.php';
-	  include_once 'includes/dbh.inc.php';
+	include_once 'includes/dbh.inc.php';
 
 		//Validation here to prevent normal user from accessing directly
       if (!isset($_SESSION['u_id']) || $_SESSION['u_admin'] == 0) {
@@ -33,13 +34,13 @@
                               $outcome = $row['outcome'];
 
                               echo "<div class='admin-content'>
-                                          Entry ID: <b>$id</b>
+                                          Entry ID: <b>escapeSTR($id)</b>
                                           <br>
                                           <form class='admin-form' method='GET'>
-                                                <label>IP Address: </label><input type='text' name='IP' value='$ipAddr' ><br>
-                                                <label>Timestamp: </label><input type='text' name='timestamp' value='$time' ><br>
-                                                <label>User ID: </label><input type='text' name='timestamp' value='$user_id' ><br>
-                                                <label>Outcome: </label><input type='text' name='timestamp' value='$outcome' >
+                                                <label>IP Address: </label><input type='text' name='IP' value=esacapeSTR('$ipAddr') ><br>
+                                                <label>Timestamp: </label><input type='text' name='timestamp' value=esacapeSTR('$time') ><br>
+                                                <label>User ID: </label><input type='text' name='timestamp' value=esacapeSTR('$user_id') ><br>
+                                                <label>Outcome: </label><input type='text' name='timestamp' value=esacapeSTR('$outcome') >
                                           </form>
                                           <br>
                                     </div>";

@@ -1,4 +1,5 @@
     <?php
+        require_once 'functions.php';
         include_once 'header.php';
     ?>
 
@@ -12,7 +13,7 @@
                     }
 
                     if(isset($_SESSION['resetSuccess'])) {
-						echo $_SESSION['resetSuccess'];
+						echo escapeSTR($_SESSION['resetSuccess']);
 						unset($_SESSION['resetSuccess']);
 					}
                 ?>
