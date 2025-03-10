@@ -20,13 +20,10 @@
 	//Reflect user's name on the page
 	if(isset($_SESSION['u_id'])) {
 		$user_uid = $_SESSION['u_uid'];
-		echo escapeSTR("You're logged in as " . cleanChars($user_uid));
+		echo "You're logged in as " . escapeSTR($user_uid);
 	}
 
-	function cleanChars($val)
-	{
-	return $val;
-	}
+// clearChar function removed in favour of my stronger escapeSTR function
 ?>
 
 <html>
@@ -79,10 +76,10 @@ Objectives
 			//echo &target;
 			if($target){
 				if (stristr(php_uname('s'), 'Windows NT')) { 
-				   $cmd = shell_exec( 'ping  ' . $target );
+				   $cmd = shell_exec( 'ping  ' . escapeshellarg($target) );
 					echo '<pre>'.$cmd.'</pre>';
 					} else { 
-						$cmd = shell_exec( 'ping  -c 3 ' . $target );
+						$cmd = shell_exec( 'ping  -c 3 ' . escapeshellarg($target) );
 						echo '<pre>'.$cmd.'</pre>';
 					}
 				}
