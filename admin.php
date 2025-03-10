@@ -34,13 +34,13 @@
                               $outcome = $row['outcome'];
 
                               echo "<div class='admin-content'>
-                                          Entry ID: <b>escapeSTR($id)</b>
+                                          Entry ID: <b>$id</b>
                                           <br>
                                           <form class='admin-form' method='GET'>
-                                                <label>IP Address: </label><input type='text' name='IP' value=esacapeSTR('$ipAddr') ><br>
-                                                <label>Timestamp: </label><input type='text' name='timestamp' value=esacapeSTR('$time') ><br>
-                                                <label>User ID: </label><input type='text' name='timestamp' value=esacapeSTR('$user_id') ><br>
-                                                <label>Outcome: </label><input type='text' name='timestamp' value=esacapeSTR('$outcome') >
+                                                <label>IP Address: </label><input type='text' name='IP' '$ipAddr' ><br>
+                                                <label>Timestamp: </label><input type='text' name='timestamp' '$time' ><br>
+                                                <label>User ID: </label><input type='text' name='timestamp' '$user_id' ><br>
+                                                <label>Outcome: </label><input type='text' name='timestamp' '$outcome' >
                                           </form>
                                           <br>
                                     </div>";
