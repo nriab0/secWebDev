@@ -26,7 +26,7 @@
             }
             $token = $_SESSION['csrf'];
             ?>
-            <input type="hidden" name="csrf-token" value="<?php echo $token ?>"/>
+            <input type="hidden" name="csrf-token" value="<?php echo escapeSTR($token) ?>"/>
         </form>
     </div>
 </section>
