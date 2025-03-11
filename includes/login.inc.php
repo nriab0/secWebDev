@@ -126,56 +126,48 @@ if (isset($_POST['submit'])) {
 }
 
 function processLogin($conn, $uid, $pwd, $ipAddr) {
-    // Errors handlers
     // Check if inputs are empty
     if (empty($uid) || empty($pwd)) {
-
         header("Location: ../index.php?login=empty");
-        failedLogin($uid,$ipAddr);
+        failedLogin($uid, $ipAddr);
         exit();
-
     } else {
-
-		try{
-		$sql = "SELECT * FROM sapusers WHERE user_uid = '" .$uid. "' and user_pwd ='" .$pwd. "'";
-		$result = $conn->query($sql);
-		
-		}catch (Exception $e) {
-			echo 'Caught exception: ',  $e->getMessage(), "\n";
-			failedLogin($e->getMessage(),$ipAddr);
-		}
-		
+        // Use a parameterized query to securely fetch user data
+        $sql = "SELECT * FROM sapusers WHERE user_uid = ? AND user_pwd = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Error preparing statement: " . $conn->error);
+        }
+        // Bind parameters as strings ("ss") for uid and pwd
+        $stmt->bind_param("ss", $uid, $pwd);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
         if ($result->num_rows < 1) {
-            
-            //failedLogin($sql,$ipAddr);
-			failedLogin($uid,$ipAddr);
-
+            failedLogin($uid, $ipAddr);
         } else {
-
-            if ($row = mysqli_fetch_assoc($result)) {
-                //Check password
-				
-				// $pwd inputted from user
-                $hashedPwdCheck = $row['user_pwd'];
-
-                if (strcmp($hashedPwdCheck, $pwd) !== 0){
-
-                    failedLogin($uid,$ipAddr);
-
-                } else{
-                    //Initiate session
+            if ($row = $result->fetch_assoc()) {
+                // Compare the retrieved password hash with the user input
+                // (Note: ideally, you would store a hashed password and use password_verify())
+                if (strcmp($row['user_pwd'], $pwd) !== 0) {
+                    failedLogin($uid, $ipAddr);
+                } else {
+                    // Initiate session
                     $_SESSION['u_id'] = $row['user_id'];
                     $_SESSION['u_uid'] = $row['user_uid'];
-                    $_SESSION['u_admin'] = $row['user_admin']; //Will be 0 for non admin users
+                    $_SESSION['u_admin'] = $row['user_admin'];
                     
-                    //Store successful login attempt, uid, timestamp, IP in log format for viewing at admin.php
+                    // Log successful login using a parameterized query
                     $time = date("Y-m-d H:i:s");
-                    $recordLogin = "INSERT INTO `loginEvents` (`ip`, `timeStamp`, `user_id`, `outcome`) VALUES (?, ?, ?, 'success')"; 
-                    $stmt = $conn->prepare($recordLogin);
-                    $stmt->bind_param("sss", $ipAddr, $time, escapeSTR($uid));
-
-                    if(!$stmt->execute()) {
-                        die("Errorx: " . $stmt->error);
+                    $recordLogin = "INSERT INTO loginEvents (ip, timeStamp, user_id, outcome) VALUES (?, ?, ?, 'success')";
+                    $stmtLog = $conn->prepare($recordLogin);
+                    if (!$stmtLog) {
+                        die("Error preparing log statement: " . $conn->error);
+                    }
+                    // No need to call escapeSTR() when using parameterized queries
+                    $stmtLog->bind_param("sss", $ipAddr, $time, $uid);
+                    if (!$stmtLog->execute()) {
+                        die("Error executing log statement: " . $stmtLog->error);
                     } else {
                         header("Location: ../auth1.php");
                         exit();
@@ -184,7 +176,7 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
             }
         }
     }
-} 
+}
 
 function failedLogin ($uid,$ipAddr) {
     include "dbh.inc.php";

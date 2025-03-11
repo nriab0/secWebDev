@@ -21,7 +21,7 @@
                               $row = mysqli_fetch_object($entry_total_result);
                               $total = $row->num_rows;
                         ?>
-                        <p><i>Total entry count: <?php echo $total; ?></i></p>
+                        <p><i>Total entry count: <?php echo escapeSTR($total); ?></i></p>
                   </div>
                   <?php
 
