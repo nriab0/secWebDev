@@ -6,7 +6,7 @@
         include_once 'dbh.inc.php';
 
         $uid = escapeSTR($_POST['uid']);
-        $pwd = $_POST['pwd'];
+        $pwd = escapeSTR($_POST['pwd']);
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
