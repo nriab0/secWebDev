@@ -1,5 +1,5 @@
 <?php
-
+require_once 'functions.php';
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
@@ -18,10 +18,10 @@ if (isset($_POST['submit'])) {
 
     include 'dbh.inc.php';
 
-    //Sanitize inputs
-    $uid = $_POST['uid'];
-    $pwd = $_POST['pwd'];
-    $ipAddr = $ipAddr;
+
+    $uid = escapeSTR($_POST['uid']);
+    $pwd = escapeSTR($_POST['pwd']);
+    $ipAddr = escapeSTR($ipAddr);
 
     //Does this client has previous failed login attempts?
     $checkClient = "SELECT `failedLoginCount`, `timeStamp` FROM `failedLogins` WHERE `ip` = ?";
@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
                         $time = date("Y-m-d H:i:s");
                         $recordLogin = "INSERT INTO `loginEvents` (`ip`, `timeStamp`, `user_id`, `outcome`) VALUES (?, ?, ?, 'fail')"; //$ipAddr, $time, $uid
                         $stmt = $conn->prepare($recordLogin);
-                        $stmt->bind_param("sss", $ipAddr, $time, cleanChars($uid));
+                        $stmt->bind_param("sss", $ipAddr, $time, escapeSTR($uid));
                         $stmt->execute();
 
                         if(!$stmt->execute()) {
@@ -172,7 +172,7 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
                     $time = date("Y-m-d H:i:s");
                     $recordLogin = "INSERT INTO `loginEvents` (`ip`, `timeStamp`, `user_id`, `outcome`) VALUES (?, ?, ?, 'success')"; 
                     $stmt = $conn->prepare($recordLogin);
-                    $stmt->bind_param("sss", $ipAddr, $time, cleanChars($uid));
+                    $stmt->bind_param("sss", $ipAddr, $time, escapeSTR($uid));
 
                     if(!$stmt->execute()) {
                         die("Errorx: " . $stmt->error);
@@ -189,13 +189,13 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
 function failedLogin ($uid,$ipAddr) {
     include "dbh.inc.php";
     //When login fails redirect to index and set the failedMsg variable so it can be displayed on index
-    $_SESSION['failedMsg'] = "The username " . cleanChars($uid) . " and password could not be authenticated at this moment.";
+    $_SESSION['failedMsg'] = "The username " . escapeSTR($uid) . " and password could not be authenticated at this moment.";
     
     //Store unsuccessful login attempt, uid, timestamp, IP in log format for viewing at admin.php
     $time = date("Y-m-d H:i:s");
     $recordLogin = "INSERT INTO `loginEvents` (`ip`, `timeStamp`, `user_id`, `outcome`) VALUES (?, ?, ?, 'fail')"; //$ipAddr, $time, $uid
     $stmt = $conn->prepare($recordLogin);
-    $stmt->bind_param("sss", $ipAddr, $time, cleanChars($uid));
+    $stmt->bind_param("sss", $ipAddr, $time, escapeSTR($uid));
 
     if(!$stmt->execute()) {
         die("Error 1: " . $stmt->error);
@@ -214,9 +214,4 @@ function failedLogin ($uid,$ipAddr) {
         }
     }
     
-}
-
-function cleanChars($val)
-{
-return $val;
 }
