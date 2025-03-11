@@ -1,11 +1,11 @@
 <?php
-
+    require_once 'functions.php';
     if (isset($_POST['submit'])) {
 
         session_start();
         include_once 'dbh.inc.php';
 
-        $uid = $_POST['uid'];
+        $uid = escapeSTR($_POST['uid']);
         $pwd = $_POST['pwd'];
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
