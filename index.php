@@ -83,7 +83,7 @@
 			}
 
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            echo "Error: " . escapeSTR($e->getMessage());
         }
 
         $conn = null; // Close the database connection
