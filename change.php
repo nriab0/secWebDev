@@ -20,7 +20,9 @@
             <input type="password" name="new_confirm" value="" placeholder="Confirm New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
             <button type="submit" name="reset" value="yes">Reset</button>
             <?php 
-            //Generate CSRF token
+            //Generate CSRF token 
+            // I have added escapeSTR() function to escape the token on the off chance that it contains special characters
+            // This is supurfluous but I have added it for completeness
             if (empty($_SESSION['csrf'])) {
                 $_SESSION['csrf'] = bin2hex(random_bytes(32));
             }

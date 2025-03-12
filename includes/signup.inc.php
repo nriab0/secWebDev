@@ -1,5 +1,5 @@
 <?php
-    require_once 'functions.php';
+    require_once 'functions.inc.php';
     if (isset($_POST['submit'])) {
 
         session_start();
