@@ -1,5 +1,6 @@
 <?php
-require_once 'functions.php';
+require_once 'functions.inc.php';
+$escaped_uid = escapeSTR($uid);
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
@@ -84,7 +85,7 @@ if (isset($_POST['submit'])) {
                         $time = date("Y-m-d H:i:s");
                         $recordLogin = "INSERT INTO `loginEvents` (`ip`, `timeStamp`, `user_id`, `outcome`) VALUES (?, ?, ?, 'fail')"; //$ipAddr, $time, $uid
                         $stmt = $conn->prepare($recordLogin);
-                        $stmt->bind_param("sss", $ipAddr, $time, escapeSTR($uid));
+                        $stmt->bind_param("sss", $ipAddr, $time, $escaped_uid);
                         $stmt->execute();
 
                         if(!$stmt->execute()) {
