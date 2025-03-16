@@ -1,6 +1,8 @@
 <?php
+include 'dbh.inc.php';
 require_once 'functions.inc.php';
 $escaped_uid = escapeSTR($uid);
+
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
@@ -13,11 +15,24 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 session_start();
 
-
+// XSRF Token
+if (empty($_SESSION['csrf_token'])) {
+$_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
+}  
 
 if (isset($_POST['submit'])) {
 
-    include 'dbh.inc.php';
+    // CSRF Token Validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['register'] = "CSRF validation failed.";
+        header("Location: ../index.php");
+        exit();
+    }
+
+    // Regenerate token
+    $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
+
+    
 
 
     $uid = escapeSTR($_POST['uid']);

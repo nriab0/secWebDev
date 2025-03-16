@@ -14,21 +14,15 @@
         • Be at least 8 characters long<br>
         • Contain a mix of uppercase and lowercase<br>
         • Contain a digit<br>
-        <form class="signup-form" action="includes/reset.inc.php" method="GET">
+        <form class="signup-form" action="includes/reset.inc.php" method="POST">
             <input type="password" name="old" value="" placeholder="Old Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
             <input type="password" name="new" value="" placeholder="New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
             <input type="password" name="new_confirm" value="" placeholder="Confirm New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+
+            <!-- CSRF token -->
+            <?= csrf_input(); ?>
+            
             <button type="submit" name="reset" value="yes">Reset</button>
-            <?php 
-            //Generate CSRF token 
-            // I have added escapeSTR() function to escape the token on the off chance that it contains special characters
-            // This is supurfluous but I have added it for completeness
-            if (empty($_SESSION['csrf'])) {
-                $_SESSION['csrf'] = bin2hex(random_bytes(32));
-            }
-            $token = $_SESSION['csrf'];
-            ?>
-            <input type="hidden" name="csrf-token" value="<?php echo escapeSTR($token) ?>"/>
         </form>
     </div>
 </section>

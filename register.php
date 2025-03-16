@@ -1,5 +1,6 @@
 <?php
     include_once 'header.php';
+    require_once 'csrf.php';
 ?>
 
     <section class="main-container">
@@ -15,6 +16,9 @@
             <form class="signup-form" action="includes/signup.inc.php" method="POST">
                 <input type="text" name="uid" value="" placeholder="Username" required>
                 <input type="password" name="pwd" value="" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+
+                <!-- CSRF token -->
+                <?= csrf_input(); ?>
 
                 <button type="submit" name="submit">Register now</button>
             </form>

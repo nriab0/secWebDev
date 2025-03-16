@@ -1,10 +1,27 @@
 <?php
     require_once 'functions.inc.php';
-    if (isset($_POST['submit'])) {
+    include_once 'dbh.inc.php';
 
         session_start();
-        include_once 'dbh.inc.php';
 
+        // XSRF Token
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
+        }   
+
+        if (isset($_POST['submit'])) {    
+
+
+        // CSRF Token Validation
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            $_SESSION['register'] = "CSRF validation failed.";
+            header("Location: ../index.php");
+            exit();
+        }
+
+        // Regenerate token
+        $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
+        
         $uid = escapeSTR($_POST['uid']);
         $pwd = escapeSTR($_POST['pwd']);
 

@@ -89,6 +89,10 @@ function resetTimer() {
         echo '  <form class="" action="includes/login.inc.php" method="POST">
         <input type="text" name="uid" value="" placeholder="Username">
         <input type="password" name="pwd" value="" placeholder="Password">
+
+                <!-- CSRF token -->
+                <?= csrf_input(); ?>
+
         <button type="submit" name="submit"> Login </button>
         </form>
         <a href="register.php"> Sign up </a>';
