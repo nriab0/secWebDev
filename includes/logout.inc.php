@@ -1,5 +1,5 @@
 <?php
-        require_once 'csrf.inc.php';
+        require_once 'csrf.php';
 
 
         session_unset();

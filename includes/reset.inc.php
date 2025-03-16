@@ -2,7 +2,7 @@
 
 //If user is not logged in or requesting to reset, redirect
 include 'dbh.inc.php';
-require_once 'csrf.inc.php';
+require_once 'csrf.php';
 
 if (!isset($_GET['reset'],$_SESSION['u_uid'])) {
     $_SESSION['resetError'] = "Error code 1";

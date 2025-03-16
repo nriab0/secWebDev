@@ -1,8 +1,7 @@
 <?php
 require_once 'functions.inc.php';
-require_once 'csrf.inc.php';
+require_once 'csrf.php';
 include 'dbh.inc.php';
-
 $escaped_uid = escapeSTR($uid);
 
 
@@ -17,15 +16,6 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 
 if (isset($_POST['submit'])) {
-
-    // CSRF Token Validation
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        $_SESSION['register'] = "CSRF validation failed.";
-        header("Location: ../index.php");
-        exit();
-    }
-
-    
 
 
     $uid = escapeSTR($_POST['uid']);
