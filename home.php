@@ -1,5 +1,6 @@
 <?php
       include_once 'header.php';
+	  require_once 'csrf.php';
 ?>
         <section class="main-container">
             <div class="main-wrapper">

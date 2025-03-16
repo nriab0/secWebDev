@@ -1,5 +1,6 @@
 <?php
     require_once 'functions.php';
+    require_once 'csrf.php';
     include_once 'header.php';
 ?>
 
@@ -21,7 +22,7 @@
 
             <!-- CSRF token -->
             <?= csrf_input(); ?>
-            
+
             <button type="submit" name="reset" value="yes">Reset</button>
         </form>
     </div>

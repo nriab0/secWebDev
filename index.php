@@ -1,5 +1,6 @@
 <?php
       require_once 'functions.php';
+	  require_once 'csrf.php';
 	  include_once 'header.php';
 ?>
         <section class="main-container">
@@ -9,6 +10,8 @@
 				<form method="post" action="">
         			<input type="submit" name="createDatabase" value="Create / Reset Database & Table">
                                 <br><br><br>
+						                <!-- CSRF token -->
+										<?= csrf_input(); ?>
                                 
     </form>
 				<?php
