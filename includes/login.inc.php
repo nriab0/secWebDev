@@ -15,10 +15,6 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ipAddr=$_SERVER['REMOTE_ADDR'];
 }
 
-// XSRF Token
-if (empty($_SESSION['csrf_token'])) {
-$_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
-}  
 
 if (isset($_POST['submit'])) {
 
@@ -28,9 +24,6 @@ if (isset($_POST['submit'])) {
         header("Location: ../index.php");
         exit();
     }
-
-    // Regenerate token
-    $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
 
     
 

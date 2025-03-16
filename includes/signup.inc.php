@@ -4,10 +4,6 @@
     include_once 'dbh.inc.php';
 
 
-        // XSRF Token
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
-        }   
 
         if (isset($_POST['submit'])) {    
 
@@ -19,8 +15,6 @@
             exit();
         }
 
-        // Regenerate token
-        $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
         
         $uid = escapeSTR($_POST['uid']);
         $pwd = escapeSTR($_POST['pwd']);
