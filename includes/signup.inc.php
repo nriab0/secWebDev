@@ -1,8 +1,8 @@
 <?php
     require_once 'functions.inc.php';
+    require_once 'csrf.inc.php';
     include_once 'dbh.inc.php';
 
-        session_start();
 
         // XSRF Token
         if (empty($_SESSION['csrf_token'])) {

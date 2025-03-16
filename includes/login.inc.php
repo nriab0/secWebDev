@@ -1,12 +1,9 @@
 <?php
-include 'dbh.inc.php';
 require_once 'functions.inc.php';
+require_once 'csrf.inc.php';
+include 'dbh.inc.php';
+
 $escaped_uid = escapeSTR($uid);
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -17,8 +14,6 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
   else {
     $ipAddr=$_SERVER['REMOTE_ADDR'];
 }
-
-session_start();
 
 // XSRF Token
 if (empty($_SESSION['csrf_token'])) {

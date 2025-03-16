@@ -2,7 +2,6 @@
     require_once 'functions.php';  
     require_once 'csrf.php';
     
-    session_start();
     //include_once 'includes/dbh.inc.php';
     if(!isset($_SESSION['u_id'])) {
         $session = 0;
