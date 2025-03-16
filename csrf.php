@@ -1,6 +1,5 @@
-<?php
-// Generate CSRF token if missing
-if (empty($_SESSION['csrf_token'])) {
+// Only generate CSRF token if it's not already set
+if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
 }
 
