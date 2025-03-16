@@ -4,13 +4,13 @@
 include 'dbh.inc.php';
 require_once 'csrf.php';
 
-if (!isset($_GET['reset'],$_SESSION['u_uid'])) {
+if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     $_SESSION['resetError'] = "Error code 1";
     header("Location: ../index.php");
 } else {
-    $oldpass = $_GET['old'];
-    $newConfirm = $_GET['new_confirm'];
-    $newpass = $_GET['new'];
+    $oldpass = $_POST['old'];
+    $newConfirm = $_POST['new_confirm'];
+    $newpass = $_POST['new'];
 
     if (empty($oldpass || $newpass)) {
         $_SESSION['resetError'] = "Error code 2";
