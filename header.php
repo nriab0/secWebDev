@@ -85,6 +85,10 @@ function resetTimer() {
 <?php
     if (isset($_SESSION['u_id'])) {
         echo '  <form class="" action="includes/logout.inc.php" method="POST">
+
+                <!-- CSRF token -->
+                <?= csrf_input(); ?>
+                
         <button type="submit" name="submit"> Log out </button>
         </form>';
     } else {

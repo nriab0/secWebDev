@@ -3,6 +3,11 @@ include 'dbh.inc.php';
 require_once 'functions.inc.php';
 $escaped_uid = escapeSTR($uid);
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ipAddr=$_SERVER['HTTP_CLIENT_IP'];

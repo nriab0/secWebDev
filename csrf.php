@@ -1,3 +1,9 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Only generate CSRF token if it's not already set
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = hash('sha256', random_bytes(64));
