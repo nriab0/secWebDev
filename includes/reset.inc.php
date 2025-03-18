@@ -9,9 +9,9 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     $_SESSION['resetError'] = "Error code 1";
     header("Location: ../index.php");
 } else {
-    $oldpass = escapeSTR($_POST['old']);
-    $newConfirm = escapeSTR($_POST['new_confirm']);
-    $newpass = escapeSTR($_POST['new']);
+    $oldpass = $_POST['old'];
+    $newConfirm = $_POST['new_confirm'];
+    $newpass = $_POST['new'];
 
     if (empty($oldpass || $newpass)) {
         $_SESSION['resetError'] = "Error code 2";
