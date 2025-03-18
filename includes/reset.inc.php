@@ -9,6 +9,10 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     $_SESSION['resetError'] = "Error code 1";
     header("Location: ../index.php");
 } else {
+
+    //validate CSRF token
+    csrf_validate();
+
     $oldpass = $_POST['old'];
     $newConfirm = $_POST['new_confirm'];
     $newpass = $_POST['new'];

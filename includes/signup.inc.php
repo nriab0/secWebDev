@@ -7,15 +7,15 @@
 
         if (isset($_POST['submit'])) {    
         
-                // Persistance xss - reject malicious scripts before processing
+            // Persistance xss - reject malicious scripts before processing
             if (preg_match('/<script|onerror|javascript:/i', $uid) || preg_match('/<script|onerror|javascript:/i', $pwd)) {
                 $_SESSION['register'] = "Invalid input detected.";
                 header("Location: ../index.php");
                 exit();
             }
 
-        $uid = escapeSTR($_POST['uid']);
-        $pwd = escapeSTR($_POST['pwd']);
+        $uid = $_POST['uid'];
+        $pwd = $_POST['pwd'];
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
