@@ -8,13 +8,13 @@
                 <h2>Homepage</h2>
 				Welcome to this Super Secure PHP Application.
 				<form method="post" action="">
-        			<input type="submit" name="createDatabase" value="Create / Reset Database & Table">
-                                <br><br><br>
-						                <!-- CSRF token -->
-										<?= csrf_input(); ?>
-                                
-    </form>
-				<?php
+    				<!-- CSRF token -->
+    				<?= csrf_input(); ?>
+    
+    				<input type="submit" name="createDatabase" value="Create / Reset Database & Table">
+				</form>
+		<?php
+
 				//DATABASE SETUP
 				    $host = "localhost";
 					$username = "TEST";
@@ -24,6 +24,7 @@
 				
 					
 		if (isset($_POST['createDatabase'])) {
+			csrf_validate();
         try {
             // Connect to MySQL server
             $conn = new PDO("mysql:host=$host", $username, $password);
