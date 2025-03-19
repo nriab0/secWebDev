@@ -25,8 +25,7 @@ if (isset($_POST['submit'])) {
     }
 
 // Prevent XSS in Username and ip address for suppurfluos security
-    $uid = escapeSTR($_POST['uid']);
-
+    $uid = sanitizeInput($_POST['uid']);
     $pwd = $_POST['pwd'];
     $ipAddr = escapeSTR($ipAddr);
 

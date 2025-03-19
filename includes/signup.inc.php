@@ -16,9 +16,9 @@
         }
 
 // Since the sumbitted username is reflrected back to the user, it must be sanitized to prevent XSS
-        $uid = escapeSTR($_POST["uid"]);
 
-        $pwd = $_POST['pwd'];
+        $uid = sanitizeInput($_POST['uid']);
+        $pwd = sanitizeInput($_POST['pwd']); // Only for validation, DO NOT store passwords like this.
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ipAddr=$_SERVER['HTTP_CLIENT_IP'];

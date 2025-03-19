@@ -21,8 +21,8 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
         $_SESSION['resetError'] = "Error code 2";
     } else {
 //u_uid was not sanitized, so it is vulnerable to SQL injection
-        $uid = escapeSTR($_SESSION['u_uid']);
-
+        $uid = sanitizeInput($_SESSION['u_uid']);
+        
         $checkOld = "SELECT * FROM `sapusers` WHERE `user_uid` = ?"; //$uid
         $stmt = $conn->prepare($checkOld);
         $stmt->bind_param("s", $uid);
