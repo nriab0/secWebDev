@@ -24,6 +24,7 @@ function csrf_validate() {
     }
 
     if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("❌ CSRF validation failed. Session Token: " . $_SESSION['csrf_token'] . " | Submitted Token: " . $_POST['csrf_token']);
+        die("❌ CSRF validation failed. <br> Session Token: " . $_SESSION['csrf_token'] . " <br> Submitted Token: " . $_POST['csrf_token']);
     }
 }
+
