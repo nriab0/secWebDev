@@ -4,7 +4,7 @@
       include_once 'header.php';
 	include_once 'includes/dbh.inc.php';
 
-		//Validation here to prevent normal user from accessing directly
+//Validation here to prevent normal user from accessing directly
       if (!isset($_SESSION['u_id']) || $_SESSION['u_admin'] == 0) {
             
       } else {
@@ -33,6 +33,21 @@
                               $time = $row['timeStamp'];
                               $user_id = $row['user_id'];
                               $outcome = $row['outcome'];
+                          
+                              // 🔹 Validate IP Address
+                              if (!filter_var($ipAddr, FILTER_VALIDATE_IP)) {
+                                  $ipAddr = "Invalid IP";
+                              }
+                          
+                              // 🔹 Validate User ID (Prevent XSS or Injection)
+                              if (!preg_match('/^[0-9A-Za-z_-]{3,50}$/', $user_id)) {
+                                  $user_id = "Invalid User";
+                              }
+                          
+                              // 🔹 Validate Outcome (Only Allow Expected Values)
+                              if (!in_array($outcome, ['success', 'fail'])) {
+                                  $outcome = "Invalid Outcome";
+                              }
 
                               echo "<div class='admin-content'>
                                           Entry ID: <b>'" . escapeSTR($id) . "'</b>
