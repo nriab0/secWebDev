@@ -16,6 +16,8 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 if (isset($_POST['submit'])) {
 
+    csrf_validate();    // Validate the CSRF token
+
 
 // Validate Username Format (Only Letters, 3-20 Characters)
     if (!preg_match('/^[a-zA-Z]{3,20}$/', $_POST['uid'])) {

@@ -6,6 +6,8 @@
 
 
         if (isset($_POST['submit'])) {    
+            
+            csrf_validate();  // Validate the CSRF token
         
 
 // Validate Username (Only Letters, Length 3-20)
@@ -18,7 +20,7 @@
 // Since the sumbitted username is reflrected back to the user, it must be sanitized to prevent XSS
 
         $uid = sanitizeInput($_POST['uid']);
-        $pwd = sanitizeInput($_POST['pwd']); // Only for validation, DO NOT store passwords like this. PLACEHOLDER&*********
+        $pwd = sanitizeInput($_POST['pwd']); // Only for validation, DO NOT store passwords like this.
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
