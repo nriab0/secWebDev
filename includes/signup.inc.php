@@ -14,7 +14,13 @@
                 exit();
             }
 
-        $uid = $_POST['uid'];
+        // Validate Username (Only letters, 3-20 characters) PXSS
+        if (!preg_match('/^[a-zA-Z]{3,20}$/', $uid)) {
+            $_SESSION['register'] = "Username must be 3-20 letters only.";
+            header("Location: ../index.php");
+            exit();
+        }
+        
         $pwd = $_POST['pwd'];
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
