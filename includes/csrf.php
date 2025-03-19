@@ -14,10 +14,16 @@ function csrf_input() {
     return '<input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">';
 }
 
-//validate CSRF token on form submission
 function csrf_validate() {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("CSRF validation failed. Session Token: " . $_SESSION['csrf_token'] . " | Submitted Token: " . $_POST['csrf_token']);
+    if (!isset($_SESSION['csrf_token'])) {
+        die("❌ CSRF validation failed: No session token found.");
+    }
+
+    if (!isset($_POST['csrf_token'])) {
+        die("❌ CSRF validation failed: No token submitted.");
+    }
+
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("❌ CSRF validation failed. Session Token: " . $_SESSION['csrf_token'] . " | Submitted Token: " . $_POST['csrf_token']);
     }
 }
-?>
