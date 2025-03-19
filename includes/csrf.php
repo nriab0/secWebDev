@@ -16,15 +16,15 @@ function csrf_input() {
 
 function csrf_validate() {
     if (!isset($_SESSION['csrf_token'])) {
-        die("❌ CSRF validation failed: No session token found.");
+        die("CSRF validation failed: No session token found.");
     }
 
     if (!isset($_POST['csrf_token'])) {
-        die("❌ CSRF validation failed: No token submitted.");
+        die("CSRF validation failed: No token submitted.");
     }
 
     if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("❌ CSRF validation failed. <br> Session Token: " . $_SESSION['csrf_token'] . " <br> Submitted Token: " . $_POST['csrf_token']);
+        die("CSRF validation failed. <br> Session Token: " . $_SESSION['csrf_token'] . " <br> Submitted Token: " . $_POST['csrf_token']);
     }
 }
 

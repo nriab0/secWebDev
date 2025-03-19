@@ -21,7 +21,7 @@
             <input type="password" name="new_confirm" value="" placeholder="Confirm New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
 
             <!-- CSRF token -->
-            <?= csrf_input(); ?>
+            <?php echo csrf_input(); ?>
 
             <button type="submit" name="reset" value="yes">Reset</button>
         </form>

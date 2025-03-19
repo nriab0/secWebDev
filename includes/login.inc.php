@@ -1,4 +1,5 @@
 <?php
+session_start();    
 require_once 'functions.inc.php';
 require_once 'csrf.php';
 include 'dbh.inc.php';
@@ -15,11 +16,6 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 
 if (isset($_POST['submit'])) {
-
-    if (!isset($_POST['csrf_token'])) {
-        die("❌ CSRF validation failed: No token submitted.");
-    }
-    
 
     csrf_validate();    // Validate the CSRF token
 

@@ -9,7 +9,7 @@
 				Welcome to this Super Secure PHP Application.
 				<form method="post" action="">
     				<!-- CSRF token -->
-    				<?= csrf_input(); ?>
+					<?php echo csrf_input(); ?> 
     
     				<input type="submit" name="createDatabase" value="Create / Reset Database & Table">
 				</form>

@@ -91,8 +91,9 @@ function resetTimer() {
         <input type="text" name="uid" value="" placeholder="Username">
         <input type="password" name="pwd" value="" placeholder="Password">
 
-                <!-- CSRF token -->
-                <?= csrf_input(); ?>
+    
+            ' . csrf_input() . '
+
 
         <button type="submit" name="submit"> Login </button>
         </form>
