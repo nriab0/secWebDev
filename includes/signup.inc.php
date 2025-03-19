@@ -7,20 +7,17 @@
 
         if (isset($_POST['submit'])) {    
         
-            // Persistance xss - reject malicious scripts before processing
-            if (preg_match('/<script|onerror|javascript:/i', $uid) || preg_match('/<script|onerror|javascript:/i', $pwd)) {
-                $_SESSION['register'] = "Invalid input detected.";
-                header("Location: ../index.php");
-                exit();
-            }
 
-        // Validate Username (Only letters, 3-20 characters) PXSS
+// Validate Username (Only Letters, Length 3-20)
         if (!preg_match('/^[a-zA-Z]{3,20}$/', $uid)) {
-            $_SESSION['register'] = "Username must be 3-20 letters only.";
+            $_SESSION['register'] = "Invalid username format.";
             header("Location: ../index.php");
             exit();
         }
-        
+
+// Since the sumbitted username is reflrected back to the user, it must be sanitized to prevent XSS
+        $uid = escapeSTR($_POST["uid"]);
+
         $pwd = $_POST['pwd'];
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {

@@ -2,7 +2,6 @@
 require_once 'functions.inc.php';
 require_once 'csrf.php';
 include 'dbh.inc.php';
-$escaped_uid = escapeSTR($uid);
 
 
 if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -18,8 +17,17 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 if (isset($_POST['submit'])) {
 
 
+// Validate Username Format (Only Letters, 3-20 Characters)
+    if (!preg_match('/^[a-zA-Z]{3,20}$/', $_POST['uid'])) {
+        $_SESSION['failedMsg'] = "Invalid username format.";
+        header("Location: ../index.php");
+        exit();
+    }
+
+// Prevent XSS in Username and ip address for suppurfluos security
     $uid = escapeSTR($_POST['uid']);
-    $pwd = escapeSTR($_POST['pwd']);
+
+    $pwd = $_POST['pwd'];
     $ipAddr = escapeSTR($ipAddr);
 
     //Does this client has previous failed login attempts?

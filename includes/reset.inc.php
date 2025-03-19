@@ -20,8 +20,8 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     if (empty($oldpass || $newpass)) {
         $_SESSION['resetError'] = "Error code 2";
     } else {
-        
-        $uid = $_SESSION['u_uid'];
+//u_uid was not sanitized, so it is vulnerable to SQL injection
+        $uid = escapeSTR($_SESSION['u_uid']);
 
         $checkOld = "SELECT * FROM `sapusers` WHERE `user_uid` = ?"; //$uid
         $stmt = $conn->prepare($checkOld);

@@ -15,7 +15,16 @@
             <div class="main-wrapper">
                 <h2>Auth page 2</h2>
 				<?php
-				$ViewFile = $_GET['FileToView'];
+
+// Validate Allowed File Names (Prevent XSS & Directory Traversal)
+				$allowedFiles = ['yellow.txt', 'log.txt', 'rules.txt'];
+
+// the file is volotile and required HTML escaping
+				$ViewFile = escapeSTR($_GET['FileToView']);
+
+				if (!in_array($ViewFile, $allowedFiles)) {
+					die("Unauthorized file access.");
+				}
      
 				if(file_get_contents ("$ViewFile"))    
 				{
