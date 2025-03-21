@@ -1,44 +1,53 @@
 <?php
-	require_once 'functions.php';
-	require_once 'csrf.php';
-	include_once 'header.php';
+require_once 'functions.php';
+require_once 'csrf.php';
+include_once 'header.php';
 
+// Redirect non-logged in users
+if (!isset($_SESSION['u_id'])) {
+    header("Location: home.php");
+    exit();
+} else {
+    $user_id = $_SESSION['u_id'];
+    $user_uid = $_SESSION['u_uid'];
+}
 
-	if (!isset($_SESSION['u_id'])) {
-	header("Location: home.php");
-	} else {
-		$user_id = $_SESSION['u_id'];
-		$user_uid = $_SESSION['u_uid'];
-	}
-?>
-        <section class="main-container">
-            <div class="main-wrapper">
-                <h2>Auth page 2</h2>
-				<?php
+// --- Directory Traversal Prevention Measures ---
 
-// Validate Allowed File Names (Prevent XSS & Directory Traversal)
-				$allowedFiles = ['yellow.txt', 'log.txt', 'rules.txt'];
+// 1. Define a list of allowed files
+$allowedFiles = ['yellow.txt', 'log.txt', 'rules.txt'];
 
-// the file is volotile and required HTML escaping
-				$ViewFile = escapeSTR($_GET['FileToView']);
+// 2. Sanitize user input (using our custom sanitizeInput function)
+$ViewFile = sanitizeInput($_GET['FileToView']);
 
-				if (!in_array($ViewFile, $allowedFiles)) {
-					die("Unauthorized file access.");
-				}
-     
-				if(file_get_contents ("$ViewFile"))    
-				{
-				$FileData = file_get_contents ("$ViewFile");
-				echo escapeSTR($FileData);
-				}
-				else
-				{
-				echo "no file found";
-				}
-?>
-            </div>
-        </section>
+// 3. Prevent parent directory traversal
+if (strpos($ViewFile, "..") !== false) {
+    die("Invalid file request.");
+}
 
-<?php
-	include_once 'footer.php';
+// 4. Ensure the file is in the allowed list
+if (!in_array($ViewFile, $allowedFiles)) {
+    die("Unauthorized file access.");
+}
+
+// 5. Disallow PHP files to prevent remote code execution
+if (pathinfo($ViewFile, PATHINFO_EXTENSION) === "php") {
+    die("Execution of PHP files is not allowed.");
+}
+
+// 6. Use an absolute path (ensure the files are stored in a dedicated directory)
+// Define the absolute path to the allowed files folder on your live server
+define("FILES_DIR", "/var/www/html/yourproject/files");
+$safePath = FILES_DIR . "/" . $ViewFile;
+
+// 7. Read and output the file content securely
+if (file_exists($safePath)) {
+    $FileData = file_get_contents($safePath);
+    // Output is sanitized to prevent XSS
+    echo sanitizeInput($FileData);
+} else {
+    echo "No file found.";
+}
+
+include_once 'footer.php';
 ?>

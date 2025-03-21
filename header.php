@@ -1,6 +1,7 @@
 <?php
     require_once 'functions.php';  
     require_once 'csrf.php';
+    require_once 'paths.php';
     
     //include_once 'includes/dbh.inc.php';
     if(!isset($_SESSION['u_id'])) {
