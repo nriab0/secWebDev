@@ -1,4 +1,11 @@
 <?php
-// Define the absolute path to the allowed files directory on your live server
-define("FILES_DIR", "/var/www/html/yourproject/files");
+// paths.php
+
+// Define the base directory where allowed files reside
+define("FILES_DIR", __DIR__ . "/pages");
+
+// If $ViewFile is defined, build the safe absolute path for it
+if (isset($ViewFile)) {
+    $safePath = FILES_DIR . "/" . $ViewFile;
+}
 ?>

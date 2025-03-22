@@ -1,7 +1,6 @@
 <?php
     require_once 'functions.php';  
     require_once 'csrf.php';
-    require_once 'paths.php';
     
     //include_once 'includes/dbh.inc.php';
     if(!isset($_SESSION['u_id'])) {
@@ -18,6 +17,8 @@
 <meta charset="utf-8">
 <title>Super Secure Site</title>
 <link rel="stylesheet" href="css/style.css">
+<!--Keep the user logged in for 1 hour maximum-->
+<meta http-equiv="refresh" content="3600;url=includes/logout.inc.php" />
 <script>
 //Run the function on window.onload
     window.onload = function() {
@@ -48,9 +49,6 @@ function resetTimer() {
 };
 </script>
 </head>
-
-<!--Keep the user logged in for 1 hour maximum-->
-<meta http-equiv="refresh" content="3600;url=includes/logout.inc.php" />
 
 <body>
 
