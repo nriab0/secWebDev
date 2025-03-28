@@ -6,9 +6,9 @@ require_once 'functions.php';
 require_once 'csrf.php';
 include_once 'header.php';
 
-// -------------------------------------------------
+//
 // Redirect if the user is not logged in
-// -------------------------------------------------
+//
 if (!isset($_SESSION['u_id'])) {
     header("Location: home.php");
     exit();
@@ -18,9 +18,9 @@ if (!isset($_SESSION['u_id'])) {
 $user_id  = $_SESSION['u_id'];
 $user_uid = $_SESSION['u_uid'];
 
-// -------------------------------------------------
+//
 // Directory Traversal Prevention Measures
-// -------------------------------------------------
+// 
 
 // 1. Define a whitelist of allowed files
 $allowedFiles = ['yellow.txt'];
