@@ -142,13 +142,13 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
         exit();
     } else {
         // Use a parameterized query to securely fetch user data
-        $sql = "SELECT * FROM sapusers WHERE user_uid = ? AND user_pwd = ?";
+        $sql = "SELECT * FROM sapusers WHERE user_uid = ?";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             die("Error preparing statement: " . $conn->error);
         }
-        // Bind parameters as strings ("ss") for uid and pwd
-        $stmt->bind_param("ss", $uid, $pwd);
+     
+        $stmt->bind_param("s", $uid);
         $stmt->execute();
         $result = $stmt->get_result();
         
@@ -158,7 +158,7 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
             if ($row = $result->fetch_assoc()) {
                 // Compare the retrieved password hash with the user input
                 // (Note: ideally, you would store a hashed password and use password_verify())
-                if (strcmp($row['user_pwd'], $pwd) !== 0) {
+                if (!password_verify($pwd, $row['user_pwd'])) {
                     failedLogin($uid, $ipAddr);
                 } else {
 

@@ -74,7 +74,9 @@
                         exit();
 
                     } else {
-                        $hashedPWD = $pwd;
+                        // Hash the password using password_hash() function
+                        // The PASSWORD_DEFAULT algorithm will use bcrypt by default, which is a strong hashing algorithm
+                        $hashedPWD = password_hash($pwd, PASSWORD_DEFAULT);;
 
                         $sql = "INSERT INTO `sapusers` (`user_uid`, `user_pwd`) VALUES (?, ?)"; 
                         $stmt = $conn->prepare($sql);
