@@ -2,7 +2,7 @@
 
 //If user is not logged in or requesting to reset, redirect
 include 'dbh.inc.php';
-require_once 'functions.inc.php';
+require_once 'functions.php';
 require_once 'csrf.php';
 
 if (!isset($_POST['reset'],$_SESSION['u_uid'])) {

@@ -1,6 +1,6 @@
 <?php
 session_start();    
-require_once 'functions.inc.php';
+require_once 'functions.php';
 require_once 'csrf.php';
 include 'dbh.inc.php';
 
