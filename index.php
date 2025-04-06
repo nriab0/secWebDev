@@ -54,11 +54,15 @@
 				$conn->exec($makeUsers);
 				echo "Table 'users' created successfully<br>"; 
 
-				$makeAdmin = "INSERT INTO `sapusers` (`user_uid`, `user_pwd`, `user_admin`) VALUES ('admin', 'AdminPass1!', '1')";
+				//Added appropriate hashing for default passwords
+				$hashedAdminPass = password_hash('AdminPass1!', PASSWORD_DEFAULT);
+				$makeAdmin = "INSERT INTO sapusers (user_uid, user_pwd, user_admin) VALUES ('admin', '$hashedAdminPass', '1')";
 				$conn->exec($makeAdmin);
 				echo "Admin Added (Username = admin, Password =AdminPass1!<br>";
 				
-				$makeAdmin = "INSERT INTO `sapusers` (`user_uid`, `user_pwd`, `user_admin`) VALUES ('user1', 'Password1!', '0')";
+				//Added appropriate hashing for default passwords
+				$hashedUserPass = password_hash('Password1!', PASSWORD_DEFAULT);
+				$makeUser = "INSERT INTO sapusers (user_uid, user_pwd, user_admin) VALUES ('user1', '$hashedUserPass', '0')";
 				$conn->exec($makeAdmin);
 				echo "User Added (Username = user1, Password =Password1!<br>";
 				
