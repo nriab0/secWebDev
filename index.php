@@ -63,7 +63,7 @@
 				//Added appropriate hashing for default passwords
 				$hashedUserPass = password_hash('Password1!', PASSWORD_DEFAULT);
 				$makeUser = "INSERT INTO sapusers (user_uid, user_pwd, user_admin) VALUES ('user1', '$hashedUserPass', '0')";
-				$conn->exec($makeAdmin);
+				$conn->exec($makeUser);
 				echo "User Added (Username = user1, Password =Password1!<br>";
 				
 				//Make table to track pre-auth sessions that should be blocked for failed login attempts
