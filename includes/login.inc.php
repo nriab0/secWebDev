@@ -156,31 +156,32 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
             failedLogin($uid, $ipAddr);
         } else {
             if ($row = $result->fetch_assoc()) {
-                // Compare the retrieved password hash with the user input
-                // (Note: ideally, you would store a hashed password and use password_verify())
-                if (!password_verify($pwd, $row['user_pwd'])) {
-                    failedLogin($uid, $ipAddr);
-                } else {
+                    // 1. Retrieve the user_salt and user_pwd from the row
+                    $saltFromDB   = $row['user_salt'];  // a hex string
+                    $storedHash   = $row['user_pwd'];   // the SHA-256 hex digest
 
-                    //session management - regeneratees a new sID to prevent session fixation attacks
-                    session_regenerate_id(true);
-                    // Initiate session
-                    $_SESSION['u_id'] = $row['user_id'];
-                    $_SESSION['u_uid'] = $row['user_uid'];
-                    $_SESSION['u_admin'] = $row['user_admin'];
-                    
-                    // Log successful login using a parameterized query
-                    $time = date("Y-m-d H:i:s");
-                    $recordLogin = "INSERT INTO loginEvents (ip, timeStamp, user_id, outcome) VALUES (?, ?, ?, 'success')";
-                    $stmtLog = $conn->prepare($recordLogin);
-                    if (!$stmtLog) {
-                        die("Error preparing log statement: " . $conn->error);
-                    }
-                    // No need to call escapeSTR() when using parameterized queries
-                    $stmtLog->bind_param("sss", $ipAddr, $time, $uid);
-                    if (!$stmtLog->execute()) {
-                        die("Error executing log statement: " . $stmtLog->error);
+                    // 2. Rebuild the salted + hashed password from user input
+                    $computedHash = hash('sha256', $saltFromDB . $pwd);
+
+                    // 3. Compare
+                    if ($computedHash !== $storedHash) {
+                        // mismatch => password is incorrect
+                        failedLogin($uid, $ipAddr);
                     } else {
+                        // match => success
+                        session_regenerate_id(true);
+
+                        $_SESSION['u_id'] = $row['user_id'];
+                        $_SESSION['u_uid'] = $row['user_uid'];
+                        $_SESSION['u_admin'] = $row['user_admin'];
+
+                        // Log event, redirect, etc.
+                        $time = date("Y-m-d H:i:s");
+                        $recordLogin = "INSERT INTO loginEvents (ip, timeStamp, user_id, outcome) VALUES (?, ?, ?, 'success')";
+                        $stmtLog = $conn->prepare($recordLogin);
+                        $stmtLog->bind_param("sss", $ipAddr, $time, $uid);
+                        $stmtLog->execute();
+
                         header("Location: ../auth1.php");
                         exit();
                     }
@@ -188,7 +189,6 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
             }
         }
     }
-}
 
 function failedLogin ($uid,$ipAddr) {
     include "dbh.inc.php";
