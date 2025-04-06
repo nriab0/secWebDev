@@ -43,28 +43,43 @@
                 $sql = "USE secureappdev";
                 $conn->exec($sql);
                 
+				//added salt to password hashing
 				$makeUsers = "CREATE TABLE `sapusers` 
 				(
-				`user_id` int(11) NOT NULL AUTO_INCREMENT,
-				user_uid varchar(256) NOT NULL,
-				user_pwd varchar(256) NOT NULL,
-				user_admin int(2) NOT NULL DEFAULT 0,
-				primary key (`user_id`))";
+					`user_id` INT(11) NOT NULL AUTO_INCREMENT,
+					user_uid  VARCHAR(256) NOT NULL,
+					user_pwd  VARCHAR(256) NOT NULL,       -- the hashed password
+					user_salt VARCHAR(64)  NOT NULL,       -- store the random salt here
+					user_admin INT(2) NOT NULL DEFAULT 0,
+					PRIMARY KEY (`user_id`)
+				)";
 				
 				$conn->exec($makeUsers);
 				echo "Table 'users' created successfully<br>"; 
 
-				//Added appropriate hashing for default passwords
-				$hashedAdminPass = password_hash('AdminPass1!', PASSWORD_DEFAULT);
-				$makeAdmin = "INSERT INTO sapusers (user_uid, user_pwd, user_admin) VALUES ('admin', '$hashedAdminPass', '1')";
+
+
+				// 1 Create a function or inline code to salt+hash the password
+				function saltAndHash($plain) {
+					$salt = bin2hex(random_bytes(16));          // generate random salt (32 hex chars)
+					$salted = $salt . $plain;                   				// concatenate
+					$hashed = hash('sha256', $salted);           	// sha256 hash
+					return [$salt, $hashed];
+				}
+
+				// 2 Admin
+				list($adminSalt, $adminHash) = saltAndHash('AdminPass1!');
+				$makeAdmin = "INSERT INTO sapusers (user_uid, user_pwd, user_salt, user_admin)
+							VALUES ('admin', '$adminHash', '$adminSalt', '1')";
 				$conn->exec($makeAdmin);
-				echo "Admin Added (Username = admin, Password =AdminPass1!<br>";
-				
-				//Added appropriate hashing for default passwords
-				$hashedUserPass = password_hash('Password1!', PASSWORD_DEFAULT);
-				$makeUser = "INSERT INTO sapusers (user_uid, user_pwd, user_admin) VALUES ('user1', '$hashedUserPass', '0')";
+				echo "Admin Added (Username=admin, Password=AdminPass1!)<br>";
+
+				// 3 user1
+				list($userSalt, $userHash) = saltAndHash('Password1!');
+				$makeUser = "INSERT INTO sapusers (user_uid, user_pwd, user_salt, user_admin)
+							VALUES ('user1', '$userHash', '$userSalt', '0')";
 				$conn->exec($makeUser);
-				echo "User Added (Username = user1, Password =Password1!<br>";
+				echo "User Added (Username=user1, Password=Password1!)<br>";
 				
 				//Make table to track pre-auth sessions that should be blocked for failed login attempts
 				$makeCounter = "CREATE TABLE `failedLogins`

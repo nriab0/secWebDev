@@ -76,11 +76,13 @@
                     } else {
                         // Hash the password using password_hash() function
                         // The PASSWORD_DEFAULT algorithm will use bcrypt by default, which is a strong hashing algorithm
-                        $hashedPWD = password_hash($pwd, PASSWORD_DEFAULT);;
+                        $salt = bin2hex(random_bytes(16));      // random salt
+                        $salted = $salt . $pwd;                                 // e.g. ab12cd + PlainTextPassword
+                        $hashedPWD = hash('sha256', $salted);
 
-                        $sql = "INSERT INTO `sapusers` (`user_uid`, `user_pwd`) VALUES (?, ?)"; 
+                        $sql = "INSERT INTO `sapusers` (`user_uid`, `user_pwd`, `user_salt`) VALUES (?, ?, ?)";
                         $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("ss", $uid, $hashedPWD);
+                        $stmt->bind_param("sss", $uid, $hashedPWD, $salt);
                         
                         if(!$stmt->execute()) {
                             echo "Error: " . $stmt->error;
