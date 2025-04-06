@@ -71,22 +71,25 @@ Objectives
 	</p>
 
   <?php
-
+// escapeshellarg() is used to escape any characters in the string that might be used to trick the shell into executing arbitrary commands.
+// It adds single quotes around the string and escapes any single quotes within the string with a backslash.
 	try {
 
-		if (isset($_REQUEST['target'])) {
-			$target = $_REQUEST['target'];
-			//echo &target;
-			if($target){
-				if (stristr(php_uname('s'), 'Windows NT')) { 
-				   $cmd = shell_exec( 'ping  ' . escapeshellarg($target) );
-					echo '<pre>'.$cmd.'</pre>';
-					} else { 
-						$cmd = shell_exec( 'ping  -c 3 ' . escapeshellarg($target) );
-						echo '<pre>'.$cmd.'</pre>';
-					}
+			if (isset($_REQUEST['target'])) {
+				$target = $_REQUEST['target'];
+				// Safely escape the argument
+				$safeTarget = escapeshellarg($target);
+		
+				// Build the command with the escaped argument
+				if (stristr(php_uname('s'), 'Windows NT')) {
+					$cmd = "ping " . $safeTarget;
+				} else {
+					$cmd = "ping -c 3 " . $safeTarget;
 				}
-			}             
+		
+				$output = shell_exec($cmd);
+				echo "<pre>" . htmlspecialchars($output, ENT_QUOTES, 'UTF-8') . "</pre>";
+			}
 		}
 	catch(Exception $e) {
 		echo '<BR> Pass your payload to a parameter called name on the URL (HTTP GET request) ';

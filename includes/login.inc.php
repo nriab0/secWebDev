@@ -161,6 +161,9 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
                 if (strcmp($row['user_pwd'], $pwd) !== 0) {
                     failedLogin($uid, $ipAddr);
                 } else {
+
+                    //session management - regeneratees a new sID to prevent session fixation attacks
+                    session_regenerate_id(true);
                     // Initiate session
                     $_SESSION['u_id'] = $row['user_id'];
                     $_SESSION['u_uid'] = $row['user_uid'];
