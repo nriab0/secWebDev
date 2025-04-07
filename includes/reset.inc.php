@@ -59,37 +59,23 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
             $storedHash = $row['user_pwd'];
             $computedHash = hash('sha256', $saltFromDB . $oldpass);
             
-            if ($computedHash !== $storedHash) {
-                $_SESSION['resetError'] = "Old password is incorrect.";
-                header("Location: ../index.php");
+            if ($newConfirm == $newpass) { // confirm they match
+                $changePass = "UPDATE `sapusers` SET `user_pwd` = ? WHERE `user_uid` = ?";
+                $stmt = $conn->prepare($changePass);
+                
+                $newHashed = hash('sha256', $saltFromDB . $newpass);  // ✅ Hash with same salt
+            
+                $stmt->bind_param("ss", $newHashed, $uid);  // ✅ Bind the hashed password
+                
+                $_SESSION['resetAttempts'] = 0;  // Reset brute-force tracker
+            
+                if(!$stmt->execute()) {
+                    echo "Error: " . $stmt->error;
+                }
+            
+                header("Location: ./logout.inc.php");
                 exit();
             }
-            } else {
-                if ($newConfirm == $newpass) { //confirm they match
-
-                    $changePass = "UPDATE `sapusers` SET `user_pwd` = ? WHERE `user_uid` = ?"; //$newpass, $uid
-                    $stmt = $conn->prepare($changePass);
-                    $stmt->bind_param("ss", $newpass, $uid);
-
-                    //reset the failed login attempts for this user - brute force protection
-                    $_SESSION['resetAttempts'] = 0;
-                            
-                    if(!$stmt->execute()) {
-                        echo "Error: " . $stmt->error;
-                    }
-
-                    header("Location: ./logout.inc.php");
-                    exit();
-                } else {
-                    $_SESSION['resetError'] = "Error code 5";
-                    header("Location: ../index.php");
-                    exit();
-                }
             }
-        } else {
-            $_SESSION['resetError'] = "Error code 6"; 
-            header("Location: ../index.php");
-            exit();
-        }
+        } 
     }
-}
