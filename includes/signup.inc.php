@@ -40,15 +40,22 @@
         }
 
         //CHECK IF USER IS LOCKED OUT
-        $checkClient = "SELECT `failedLoginCount` FROM `failedLogins` WHERE `ip` = ?";
+        $checkClient = "SELECT failedLoginCount, timeStamp FROM failedLogins WHERE ip = ?";
         $stmt = $conn->prepare($checkClient);
         $stmt->bind_param("s", $ipAddr);
         $stmt->execute();
-        $result = $stmt->get_result(); 
-        if ($result->fetch_row()[0] == 5) {
-            $_SESSION['register'] = "Error: locked out.";
-            header("Location: ../index.php");
-            exit();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            $time = strtotime($row['timeStamp']);
+            $now = time();
+            $diff = $now - $time;
+        
+            if ($row['failedLoginCount'] >= 5 && $diff <= 180) {
+                $_SESSION['register'] = "You are temporarily locked out due to multiple failed actions.";
+                header("Location: ../index.php");
+                exit();
+            }
         }
         
         // Check for empty fields

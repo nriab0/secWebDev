@@ -13,6 +13,18 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     //validate CSRF token
     csrf_validate();
 
+    // Track brute-force attempts per session
+    if (!isset($_SESSION['resetAttempts'])) {
+        $_SESSION['resetAttempts'] = 0;
+    }
+    $_SESSION['resetAttempts']++;
+
+    if ($_SESSION['resetAttempts'] > 3) {
+        $_SESSION['resetError'] = "Too many failed attempts. Please try again later.";
+        header("Location: ../index.php");
+        exit();
+    }
+
     $oldpass = $_POST['old'];
     $newConfirm = $_POST['new_confirm'];
     $newpass = $_POST['new'];
@@ -52,6 +64,9 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
                     $changePass = "UPDATE `sapusers` SET `user_pwd` = ? WHERE `user_uid` = ?"; //$newpass, $uid
                     $stmt = $conn->prepare($changePass);
                     $stmt->bind_param("ss", $newpass, $uid);
+
+                    //reset the failed login attempts for this user - brute force protection
+                    $_SESSION['resetAttempts'] = 0;
                             
                     if(!$stmt->execute()) {
                         echo "Error: " . $stmt->error;
