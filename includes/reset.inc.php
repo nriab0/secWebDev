@@ -59,23 +59,36 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
             $storedHash = $row['user_pwd'];
             $computedHash = hash('sha256', $saltFromDB . $oldpass);
             
-            if ($newConfirm == $newpass) { // confirm they match
+            // Rebuild the hash for old password
+            $computedHash = hash('sha256', $saltFromDB . $oldpass);
+
+            if ($computedHash !== $storedHash) {
+                $_SESSION['resetError'] = "Old password incorrect.";
+                header("Location: ../index.php");
+                exit();
+            }
+
+            if ($newConfirm === $newpass) { // Only continue if they match
+                $newHashed = hash('sha256', $saltFromDB . $newpass);  // Reuse the same salt
+                
                 $changePass = "UPDATE `sapusers` SET `user_pwd` = ? WHERE `user_uid` = ?";
                 $stmt = $conn->prepare($changePass);
-                
-                $newHashed = hash('sha256', $saltFromDB . $newpass);  // ✅ Hash with same salt
-            
-                $stmt->bind_param("ss", $newHashed, $uid);  // ✅ Bind the hashed password
+                $stmt->bind_param("ss", $newHashed, $uid);
                 
                 $_SESSION['resetAttempts'] = 0;  // Reset brute-force tracker
-            
+
                 if(!$stmt->execute()) {
                     echo "Error: " . $stmt->error;
                 }
-            
+
                 header("Location: ./logout.inc.php");
                 exit();
+            } else {
+                $_SESSION['resetError'] = "Passwords do not match.";
+                header("Location: ../index.php");
+                exit();
             }
+
             }
         } 
     }
