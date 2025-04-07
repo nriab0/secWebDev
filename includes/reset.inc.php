@@ -17,6 +17,14 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     $newConfirm = $_POST['new_confirm'];
     $newpass = $_POST['new'];
 
+    // Validate Password (At least 8 characters, 1 uppercase, 1 lowercase, 1 digit)
+    if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $newpass)) {
+        $_SESSION['resetError'] = "Password must be at least 8 characters, include uppercase, lowercase, and a digit.";
+        header("Location: ../index.php");
+        exit();
+    }
+    
+
     if (empty($oldpass || $newpass)) {
         $_SESSION['resetError'] = "Error code 2";
     } else {

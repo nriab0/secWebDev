@@ -20,7 +20,15 @@
 // Since the sumbitted username is reflrected back to the user, it must be sanitized to prevent XSS
 
         $uid = sanitizeInput($_POST['uid']);
-        $pwd = sanitizeInput($_POST['pwd']); // Only for validation, DO NOT store passwords like this.
+        $pwd = sanitizeInput($_POST['pwd']); 
+
+        // Validate Password (At least 8 characters, 1 uppercase, 1 lowercase, 1 digit)
+        if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $pwd)) {
+            $_SESSION['register'] = "Password must be at least 8 characters, include uppercase, lowercase, and a digit.";
+            header("Location: ../index.php");
+            exit();
+        }
+        
 
         if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ipAddr=$_SERVER['HTTP_CLIENT_IP'];
