@@ -53,11 +53,17 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
 
             $row = mysqli_fetch_assoc($result); 
 
-			
-            if (strcmp($oldpass, $row['user_pwd']) !== 0) {
-                $_SESSION['resetError'] = "Error code 4";
+			//authenticate the old password
+            //hash the old password with the salt from the database
+            $saltFromDB = $row['user_salt'];
+            $storedHash = $row['user_pwd'];
+            $computedHash = hash('sha256', $saltFromDB . $oldpass);
+            
+            if ($computedHash !== $storedHash) {
+                $_SESSION['resetError'] = "Old password is incorrect.";
                 header("Location: ../index.php");
                 exit();
+            }
             } else {
                 if ($newConfirm == $newpass) { //confirm they match
 
