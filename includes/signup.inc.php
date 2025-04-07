@@ -89,8 +89,8 @@
                         exit();
 
                     } else {
-                        // Hash the password using password_hash() function
-                        // The PASSWORD_DEFAULT algorithm will use bcrypt by default, which is a strong hashing algorithm
+                        // Hash the password with a random salt
+                        // Use a secure hashing algorithm (e.g., bcrypt, Argon2) for better security
                         $salt = bin2hex(random_bytes(16));      // random salt
                         $salted = $salt . $pwd;                                 // e.g. ab12cd + PlainTextPassword
                         $hashedPWD = hash('sha256', $salted);

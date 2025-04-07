@@ -2,6 +2,12 @@
         require_once 'functions.php';
         require_once 'csrf.php';
         include_once 'header.php';
+
+        if (isset($_SESSION['u_id'])) {
+            session_unset();
+            session_destroy();
+            session_start(); // Re-init so you can show feedback messages
+        }
     ?>
 
         <section class="main-container">

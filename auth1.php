@@ -6,6 +6,7 @@
 
 	if (!isset($_SESSION['u_id'])) {
 	header("Location: home.php");
+	exit();
 	} else {
 		$user_id = $_SESSION['u_id']; 
 		$user_uid = $_SESSION['u_uid'];

@@ -14,7 +14,7 @@
 			• Contain a mix of uppercase and lowercase<br>
 			• Contain a digit<br>
             <form class="signup-form" action="includes/signup.inc.php" method="POST">
-                <input type="text" name="uid" value="" placeholder="Username" required>
+                <input type="text" name="uid" placeholder="Username" pattern="[a-zA-Z]{3,20}" required>
                 <input type="password" name="pwd" value="" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
 
                 <!-- CSRF token -->

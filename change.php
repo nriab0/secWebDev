@@ -2,7 +2,13 @@
     require_once 'functions.php';
     require_once 'csrf.php';
     include_once 'header.php';
+
+    if (!isset($_SESSION['u_uid'])) {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>
+
 
 <section class="main-container">
     <div class="main-wrapper">
