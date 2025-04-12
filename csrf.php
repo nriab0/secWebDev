@@ -1,5 +1,5 @@
 <?php
-//ensure session is started (anti-redundant)
+// [CSRF 4.4: Generating tokens if missing, embedding and validating them in forms]
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

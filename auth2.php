@@ -6,6 +6,7 @@ require_once 'functions.php';
 require_once 'csrf.php';
 include_once 'header.php';
 
+// [Directory Traversal 6.4: Enforce whitelisting, block '..' patterns, etc.]
 //
 // Redirect if the user is not logged in
 //

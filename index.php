@@ -8,7 +8,7 @@
                 <h2>Homepage</h2>
 				Welcome to this Super Secure PHP Application.
 				<form method="post" action="">
-    				<!-- CSRF token -->
+    				<!-- [Mitigation for CSRF 4.4: Embedding a token to protect DB creation button] -->
 					<?php echo csrf_input(); ?> 
     
     				<input type="submit" name="createDatabase" value="Create / Reset Database & Table">
@@ -24,6 +24,7 @@
 				
 					
 		if (isset($_POST['createDatabase'])) {
+			// [CSRF 4.4: validating token in your code below -> csrf_validate();]
 			csrf_validate();
         try {
             // Connect to MySQL server
@@ -59,7 +60,7 @@
 
 
 
-				// 1 Create a function or inline code to salt+hash the password
+				 // [Password Storage 9.4: Generating salt and hashing in "saltAndHash()" for initial admin user]
 				function saltAndHash($plain) {
 					$salt = bin2hex(random_bytes(16));          // generate random salt (32 hex chars)
 					$salted = $salt . $plain;                   				// concatenate
@@ -107,12 +108,13 @@
 
         } catch (PDOException $e) {
             echo "Error: " . escapeSTR($e->getMessage());
+			// [Reflective XSS 1.4 / 2.4: Using escapeSTR() on the error message so no HTML/JS runs]
         }
 
         $conn = null; // Close the database connection
     }
 	
-										
+					
 					//Message if login fails 
 					echo "<br>";
 					if (isset($_SESSION['failedMsg']))

@@ -4,6 +4,7 @@
         include_once 'header.php';
 
         if (isset($_SESSION['u_id'])) {
+             // [Session Management 7.4: Properly destroying session data upon logout]
             session_unset();
             session_destroy();
             session_start(); // Re-init so you can show feedback messages

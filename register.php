@@ -17,7 +17,7 @@
                 <input type="text" name="uid" placeholder="Username" pattern="[a-zA-Z]{3,20}" required>
                 <input type="password" name="pwd" value="" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
 
-                <!-- CSRF token -->
+                <!-- [Mitigation for CSRF 4.4: Embedding a unique token in the signup form] -->
                 <?= csrf_input(); ?>
 
                 <button type="submit" name="submit">Register now</button>

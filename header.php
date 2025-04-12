@@ -1,5 +1,5 @@
 <?php
-    //No cahing for autheticated users - global implemetnation
+    // [Page Caching 11.4: Disable caching for authenticated users]
     if (isset($_SESSION['u_id'])) {
         header("Cache-Control: no-cache, no-store, must-revalidate");
         header("Pragma: no-cache");
@@ -9,7 +9,7 @@
     require_once 'functions.php';  
     require_once 'csrf.php';
     
-    //include_once 'includes/dbh.inc.php';
+    // [Session Management 7.4: We rely on session usage for user tracking, inactivity auto-logout, etc.]
     if(!isset($_SESSION['u_id'])) {
         $session = 0;
     } else {
@@ -39,7 +39,7 @@ window.onload = resetTimer;
 document.onmousemove = resetTimer;
 document.onkeypress = resetTimer;
 
-//Only logout if the user is logged in
+// [Session Management 7.4: The inactivity logout logic in JavaScript] + [escapeSTR XSS 1.4]
 function logout() {
     var session='<?php echo escapeSTR($session);?>';
     if(session == 1) {

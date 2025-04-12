@@ -19,6 +19,7 @@
                   <h2>Login Events</h2>
                   <div class="admin-entry-count">
                         <?php
+                         // [Reflective/Persistent XSS 1.4/2.4: escapeSTR() used on output below]
                               $entry_total_result = mysqli_query($conn, "SELECT count(event_id) AS num_rows FROM loginevents");
                               $row = mysqli_fetch_object($entry_total_result);
                               $total = $row->num_rows;

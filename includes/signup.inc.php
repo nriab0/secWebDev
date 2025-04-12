@@ -7,8 +7,11 @@
 
         if (isset($_POST['submit'])) {    
             
-            csrf_validate();  // Validate the CSRF token
-        
+            // [CSRF 4.4: Validate the token]
+            csrf_validate();  
+
+// [Brute Force 5.4: Check if user is locked out for repeated failures (like from login attempts)]
+// e.g. check the 'failedLogins' table for IP
 
 // Validate Username (Only Letters, Length 3-20)
         if (!preg_match('/^[a-zA-Z]{3,20}$/', $uid)) {
@@ -22,7 +25,7 @@
         $uid = sanitizeInput($_POST['uid']);
         $pwd = sanitizeInput($_POST['pwd']); 
 
-        // Validate Password (At least 8 characters, 1 uppercase, 1 lowercase, 1 digit)
+        // [Password Complexity 10.4: Checking with regex for uppercase, lowercase, digit, length >= 8]
         if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $pwd)) {
             $_SESSION['register'] = "Password must be at least 8 characters, include uppercase, lowercase, and a digit.";
             header("Location: ../index.php");
@@ -39,7 +42,7 @@
             $ipAddr=$_SERVER['REMOTE_ADDR'];
         }
 
-        //CHECK IF USER IS LOCKED OUT
+        // [SQL Injection 3.4: Using prepared statements to check if user exists and insert]
         $checkClient = "SELECT failedLoginCount, timeStamp FROM failedLogins WHERE ip = ?";
         $stmt = $conn->prepare($checkClient);
         $stmt->bind_param("s", $ipAddr);
@@ -89,8 +92,10 @@
                         exit();
 
                     } else {
+                        // [Password Storage 9.4: Salt + SHA-256 hashing before INSERT]
                         // Hash the password with a random salt
                         // Use a secure hashing algorithm (e.g., bcrypt, Argon2) for better security
+                        
                         $salt = bin2hex(random_bytes(16));      // random salt
                         $salted = $salt . $pwd;                                 // e.g. ab12cd + PlainTextPassword
                         $hashedPWD = hash('sha256', $salted);

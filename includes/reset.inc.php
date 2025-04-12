@@ -10,10 +10,10 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     header("Location: ../index.php");
 } else {
 
-    //validate CSRF token
+    // [CSRF 4.4: Validate token before processing password reset]
     csrf_validate();
 
-    // Track brute-force attempts per session
+    // [Brute Force 5.4: Using $_SESSION['resetAttempts'] to limit repeated reset attempts]
     if (!isset($_SESSION['resetAttempts'])) {
         $_SESSION['resetAttempts'] = 0;
     }
@@ -29,7 +29,7 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
     $newConfirm = $_POST['new_confirm'];
     $newpass = $_POST['new'];
 
-    // Validate Password (At least 8 characters, 1 uppercase, 1 lowercase, 1 digit)
+    // [Password Complexity 10.4: Checking new password with the same pattern]
     if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $newpass)) {
         $_SESSION['resetError'] = "Password must be at least 8 characters, include uppercase, lowercase, and a digit.";
         header("Location: ../index.php");
@@ -53,8 +53,7 @@ if (!isset($_POST['reset'],$_SESSION['u_uid'])) {
 
             $row = mysqli_fetch_assoc($result); 
 
-			//authenticate the old password
-            //hash the old password with the salt from the database
+			 // [Password Storage 9.4: Rebuilding salted hash with the user’s existing salt]
             $saltFromDB = $row['user_salt'];
             $storedHash = $row['user_pwd'];
             $computedHash = hash('sha256', $saltFromDB . $oldpass);

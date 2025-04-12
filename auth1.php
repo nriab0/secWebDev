@@ -75,7 +75,8 @@ Objectives
 // escapeshellarg() is used to escape any characters in the string that might be used to trick the shell into executing arbitrary commands.
 // It adds single quotes around the string and escapes any single quotes within the string with a backslash.
 	try {
-
+// [Command Injection 12.4: Using escapeshellarg() to safely pass user input to ping]
+// Also XSS escaping the output with htmlspecialchars()
 			if (isset($_REQUEST['target'])) {
 				$target = $_REQUEST['target'];
 				// Safely escape the argument

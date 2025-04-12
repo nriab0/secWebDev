@@ -16,9 +16,11 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
 
 if (isset($_POST['submit'])) {
+    // [CSRF 4.4: Validate token on login form submission]
+    csrf_validate();    
 
-    csrf_validate();    // Validate the CSRF token
-
+// [Brute Force 5.4: Checking 'failedLogins' table, limiting attempts, lockouts for 3 minutes]
+    // logic around `failedLoginCount`, timestamps, etc.
 
 // Validate Username Format (Only Letters, 3-20 Characters)
     if (!preg_match('/^[a-zA-Z]{3,20}$/', $_POST['uid'])) {
@@ -32,7 +34,7 @@ if (isset($_POST['submit'])) {
     $pwd = $_POST['pwd'];
     $ipAddr = escapeSTR($ipAddr);
 
-    //Does this client has previous failed login attempts?
+        // [SQL Injection 3.4: Using prepared statements for user lookups]
     $checkClient = "SELECT `failedLoginCount`, `timeStamp` FROM `failedLogins` WHERE `ip` = ?";
     $stmt = $conn->prepare($checkClient);
     $stmt->bind_param("s", $ipAddr);
@@ -156,6 +158,7 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
             failedLogin($uid, $ipAddr);
         } else {
             if ($row = $result->fetch_assoc()) {
+                // [Password Storage 9.4: Checking the stored salt+hash combination]
                     // 1. Retrieve the user_salt and user_pwd from the row
                     $saltFromDB   = $row['user_salt'];  // a hex string
                     $storedHash   = $row['user_pwd'];   // the SHA-256 hex digest
@@ -169,6 +172,7 @@ function processLogin($conn, $uid, $pwd, $ipAddr) {
                         failedLogin($uid, $ipAddr);
                     } else {
                         // match => success
+                         // [Session Fixation 8.4: session_regenerate_id(true) after successful login]
                         session_regenerate_id(true);
 
                         $_SESSION['u_id'] = $row['user_id'];
